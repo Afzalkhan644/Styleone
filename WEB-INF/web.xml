@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+  version="4.0"
+  metadata-complete="true">
+
+    <description>
+      Style One
+    </description>
+    <display-name>Style One</display-name>
+
+    <request-character-encoding>UTF-8</request-character-encoding>
+
+<servlet>
+<servlet-name>DesignationsView</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.DesignationsView</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>DesignationsView</servlet-name>
+<url-pattern>/designationsView</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>AddDesignation</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.AddDesignation</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>AddDesignation</servlet-name>
+<url-pattern>/addDesignation</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>EditDesignation</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.EditDesignation</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>EditDesignation</servlet-name>
+<url-pattern>/editDesignation</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>UpdateDesignation</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.UpdateDesignation</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>UpdateDesignation</servlet-name>
+<url-pattern>/updateDesignation</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>ConfirmDeleteDesignation</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.ConfirmDeleteDesignation</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>ConfirmDeleteDesignation</servlet-name>
+<url-pattern>/confirmDeleteDesignation</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>DeleteDesignation</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.DeleteDesignation</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>DeleteDesignation</servlet-name>
+<url-pattern>/deleteDesignation</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>EmployeesView</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.EmployeesView</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>EmployeesView</servlet-name>
+<url-pattern>/employeesView</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>GetEmployeeAddForm</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.GetEmployeeAddForm</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>GetEmployeeAddForm</servlet-name>
+<url-pattern>/getEmployeeAddForm</url-pattern>
+</servlet-mapping>
+
+<servlet>
+<servlet-name>AddEmployee</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.AddEmployee</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>AddEmployee</servlet-name>
+<url-pattern>/addEmployee</url-pattern>
+</servlet-mapping>
+
+
+</web-app>
