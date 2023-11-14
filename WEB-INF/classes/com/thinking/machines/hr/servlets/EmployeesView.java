@@ -130,11 +130,12 @@ pw.println("<th style='width:100px;text-align:center'>Delete</th>");
 pw.println("</tr>");
 pw.println("</thead>");
 pw.println("<tbody>");
-int j=1;
+int sno=0;
 for(EmployeeDTO employee:employees)
 {
+sno++;
 pw.println("<tr style='cursor:pointer' onclick='selectEmployee(this,\""+employee.getEmployeeId()+"\")'>");
-pw.println("<td style='text-align:right'>"+j+".</td>");
+pw.println("<td style='text-align:right'>"+sno+".</td>");
 pw.println("<td>"+employee.getEmployeeId()+"</td>");
 pw.println("<td>"+employee.getName()+"</td>");
 pw.println("<td>"+employee.getDesignation()+"</td>");
@@ -142,7 +143,6 @@ System.out.println("Designation in EmployeesView: "+employee.getDesignation());
 pw.println("<td style='text-align:center'><a href='/styleone/editEmployee?employeeId="+employee.getEmployeeId()+"'>Edit</a></td>");
 pw.println("<td style='text-align:center'><a href='/styleone/confirmDeleteEmployee?employeeId="+employee.getEmployeeId()+"'>Delete</a></td>");
 pw.println("</tr>");
-i++;
 }
 pw.println("</tbody>");
 pw.println("</table>");
