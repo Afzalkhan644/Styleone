@@ -125,5 +125,47 @@ throw new DAOException(sqlException.getMessage());
 }
 }
 
+public boolean panNumberExists(String  panNumber) throws DAOException
+{
+boolean exists=false;
+try
+{
+Connection connection=DAOConnection.getConnection();
+PreparedStatement preparedStatement=connection.prepareStatement("select gender from employee where pan_number=?");
+preparedStatement.setString(1,panNumber);
+
+ResultSet resultSet=preparedStatement.executeQuery();
+exists=resultSet.next();
+resultSet.close();
+preparedStatement.close();
+connection.close();
+}catch(Exception exception)
+{
+throw new DAOException(exception.getMessage());
+}
+return exists;
+}
+
+
+public boolean aadharCardNumberExists(String  aadharCardNumber) throws DAOException
+{
+boolean exists=false;
+try
+{
+Connection connection=DAOConnection.getConnection();
+PreparedStatement preparedStatement=connection.prepareStatement("select gender from employee where aadhar_card_number=?");
+preparedStatement.setString(1,aadharCardNumber);
+
+ResultSet resultSet=preparedStatement.executeQuery();
+exists=resultSet.next();
+resultSet.close();
+preparedStatement.close();
+connection.close();
+}catch(Exception exception)
+{
+throw new DAOException(exception.getMessage());
+}
+return exists;
+}
 
 }
