@@ -46,7 +46,7 @@ pw.println("<!-- content-section starts here -->");
 pw.println("<div style='width:90hw;height:70vh;margin:5px;border:1px solid white'>");
 pw.println("<!-- left panel starts here -->");
 pw.println("<div style='height:65vh;margin:5px;border:1px solid black;float:left;padding:5px'>");
-pw.println("<a href='/styleone/designationsView'>Designations</b><br><br>");
+pw.println("<a href='/styleone/designationsView'>Designations</a><br><br>");
 pw.println("<b>Employees</b><br>");
 pw.println("<a href='/styleone/index.html'>Home</a>");
 pw.println("</div>");
