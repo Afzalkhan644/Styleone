@@ -7,7 +7,7 @@ private String employeeId;
 private String name;
 private int designationCode;
 private String designation;
-private String title;
+//private String title;
 private java.util.Date dateOfBirth;
 private String gender;
 private boolean isIndian;
@@ -21,7 +21,7 @@ this.employeeId="";
 this.name="";
 this.designationCode=0;
 this.designation="";
-this.title="";
+//this.title="";
 this.dateOfBirth=null;
 this.gender="";
 this.isIndian=false;
@@ -61,14 +61,14 @@ public java.lang.String getDesignation()
 {
 return this.designation;
 }
-public void setTitle(java.lang.String title)
+/*public void setTitle(java.lang.String title)
 {
 this.title=title;
 }
 public java.lang.String getTitle()
 {
 return this.title;
-}
+}*/
 public void setDateOfBirth(java.util.Date dateOfBirth)
 {
 this.dateOfBirth=dateOfBirth;
