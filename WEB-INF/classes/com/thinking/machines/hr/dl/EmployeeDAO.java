@@ -174,7 +174,7 @@ public void deletebyEmployeeId(String employeeId) throws DAOException
 int actualEmployeeId = 0;
 try
 {
-actualEmployeeId =Integer.parseInt(employeeId.substring(1))-1000000;
+actualEmployeeId =Integer.parseInt(employeeId.substring(1));
 }
 catch(Exception exception){
 throw new DAOException("Invalid Employee ID:"+employeeId);
