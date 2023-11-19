@@ -6,25 +6,71 @@ import com.thinking.machines.hr.dl.*;
 import java.util.*;
 import java.text.*;
 import java.math.*;
-public class EditEmployee extends HttpServlet
+public class UpdateEmployee extends HttpServlet
 {
 public void doGet(HttpServletRequest request,HttpServletResponse response)
 {
-String employeeId=request.getParameter("employeeId");
-System.out.println("employeeId is "+employeeId);
-EmployeeDAO employeeDAO=new EmployeeDAO();
-EmployeeDTO employee=null;
-try
-{
-employee=employeeDAO.getEmployeeById(employeeId);
-}catch(DAOException daoException)
-{
-sendBackView(response);
-}
 try
 {
 response.setContentType("text/html");
 PrintWriter pw=response.getWriter();
+SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+String employeeId=request.getParameter("employeeId");
+System.out.println("employee id 1 is "+employeeId);
+String name=request.getParameter("name");
+int designationCode=Integer.parseInt(request.getParameter("designationCode"));
+Date dateOfBirth=simpleDateFormat.parse(request.getParameter("dateOfBirth"));
+String gender=request.getParameter("gender");
+String isIndian=request.getParameter("isIndian");
+if(isIndian==null) isIndian="N";
+BigDecimal basicSalary=new BigDecimal(request.getParameter("basicSalary"));
+String panNumber=request.getParameter("panNumber");
+String aadharCardNumber=request.getParameter("aadharCardNumber");
+DesignationDAO designationDAO=new DesignationDAO();
+EmployeeDAO employeeDAO=new EmployeeDAO();
+EmployeeDTO employee=new EmployeeDTO();
+try
+{
+if(employeeDAO.EmployeeByIdExists(employeeId)==false)
+{
+sendBackView(response);
+return;
+}
+boolean designationCodeExists=designationDAO.designationCodeExists(designationCode);
+boolean panNumberExists=false;
+EmployeeDTO employeeDTO;
+try
+{
+employeeDTO=employeeDAO.getByPanNumber(panNumber);
+System.out.println(employeeDTO.getEmployeeId());
+if(employeeDTO.getEmployeeId().equalsIgnoreCase(employeeId)==false)
+{
+System.out.println("panNumber");
+panNumberExists=true;
+}
+}catch(DAOException daoException)
+{
+panNumberExists=false;
+}
+boolean aadharCardNumberExists=false;
+try
+{
+employeeDTO=employeeDAO.getByAadharCardNumber(aadharCardNumber);
+System.out.println(employeeDTO.getEmployeeId());
+if(employeeDTO.getEmployeeId().equalsIgnoreCase(employeeId)==false)
+{
+System.out.println("AadharNumber");
+aadharCardNumberExists=true;
+}
+}catch(DAOException daoException)
+{
+aadharCardNumberExists=false;
+}
+
+if(designationCodeExists==false || panNumberExists==true|| aadharCardNumberExists==true)
+{
+
+System.out.println("inside");
 pw.println("<!DOCTYPE HTML>");
 pw.println("<html lang='en'>");
 pw.println("<head>");
@@ -157,11 +203,10 @@ pw.println("<!-- right panel starts here -->");
 pw.println("<div style='height:65vh;margin-left:105px;margin-right:5px;margin-bottom:5px;margin-top:5px;padding:5px;border:1px solid black'>");
 pw.println("<b>Employee (Edit Module)</b>");
 pw.println("<form method='post' action='/styleone/updateEmployee' onsubmit='return validateForm(this)'>");
-pw.println("<input type='hidden' name='employeeId' id='employeeId' value='"+employeeId+"'>");
+pw.println("<input type='hidden' id='employeeId' name='employeeId' value='"+employeeId+"'>");
 pw.println("<table>");
 pw.println("<tr>");
 pw.println("<td>Name</td>");
-String name=employee.getName();
 pw.println("<td><input type='text' id='name' name='name' maxlength='50' size='51' value='"+name+"'><br>");
 pw.println("<span id='nameErrorSection' style='color:red'></span><br></td>");
 pw.println("</tr>");
@@ -169,9 +214,7 @@ pw.println("<tr>");
 pw.println("<td>Designation</td>");
 pw.println("<td><select id='designationCode' name='designationCode'>");
 pw.println("<option value='-1'>&lt;Select Designation&gt;</option>");
-DesignationDAO designationDAO=new DesignationDAO();
 List<DesignationDTO> designations=designationDAO.getAll();
-int designationCode=employee.getDesignationCode();
 int code;
 String title;
 for(DesignationDTO designation:designations)
@@ -188,20 +231,25 @@ pw.println("<option selected value='"+code+"'>"+title+"</option>");
 }
 }
 pw.println("</select><br>");
+if(designationCodeExists==false)
+{
+pw.println("<span id='designationCodeErrorSection' style='color:red'>Invalid designation</span>");
+}
+else
+{
 pw.println("<span id='designationCodeErrorSection' style='color:red'></span>");
+}
 pw.println("</td>");
 pw.println("</tr>");
 pw.println("<tr>");
 pw.println("<td>Date of birth</td>");
-SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-java.util.Date dateOfBirth=employee.getDateOfBirth();
 pw.println("<td><input type='date' id='dateOfBirt' name='dateOfBirth' value='"+simpleDateFormat.format(dateOfBirth)+"'><br>");
 pw.println("<span id='dateOfBirthErrorSection' style='color:red'></span>");
 pw.println("</td>");
 pw.println("</tr>");
 pw.println("<tr>");
 pw.println("<td>Gender</td>");
-String gender=employee.getGender();
+
 pw.println("<td>");
 if(gender.equals("M")==false)
 {
@@ -226,10 +274,9 @@ pw.println("<span id='genderErrorSection' style='color:red'></span>");
 pw.println("</td>");
 pw.println("</tr>");
 pw.println("<tr>");
-boolean isIndian=employee.getIsIndian();
 pw.println("<td>Indian ?</td>");
 pw.println("<td>");
-if(isIndian)
+if(isIndian.equals("Y"))
 {
 pw.println("<input checked type='checkbox' name='isIndian' id='isIndian'>");
 }
@@ -242,7 +289,6 @@ pw.println("</tr>");
 pw.println("<tr>");
 pw.println("<td>Basic Salary</td>");
 pw.println("<td>");
-BigDecimal basicSalary=employee.getBasicSalary();
 pw.println("<input type='text' style='text-align:right' name='basicSalary' id='basicSalary' maxlength='12' size='13' value='"+basicSalary.toPlainString()+"'>");
 pw.println("<br>");
 pw.println("<span id='basicSalaryErrorSection' style='color:red'></span>");
@@ -251,17 +297,29 @@ pw.println("</tr>");
 pw.println("<tr>");
 pw.println("<td>PAN Number</td>");
 pw.println("<td>");
-String panNumber=employee.getPanNumber();
 pw.println("<input type='text' id='panNumber' name='panNumber' maxlength='15' size='15' value='"+panNumber+"'>");
+if(panNumberExists)
+{
+pw.println("<span id='panNumberErrorSection' style='color:red'>PAN number exists</span>");
+}
+else
+{
 pw.println("<span id='panNumberErrorSection' style='color:red'></span>");
+}
 pw.println("</td>");
 pw.println("</tr>");
 pw.println("<tr>");
 pw.println("<td>Aadhar Card Number</td>");
 pw.println("<td>");
-String aadharCardNumber=employee.getAadharCardNumber();
 pw.println("<input type='text' id='aadharCardNumber' name='aadharCardNumber' maxlength='15' size='15' value='"+aadharCardNumber+"'>");
+if(aadharCardNumberExists)
+{
+pw.println("<span id='aadharCardNumberErrorSection' style='color:red'>Aadhar Card Number Exist</span>");
+}
+else
+{
 pw.println("<span id='aadharCardNumberErrorSection' style='color:red'></span>");
+}
 pw.println("</td>");
 pw.println("</tr>");
 pw.println("<tr>");
@@ -284,9 +342,72 @@ pw.println("<form id='cancelUpdateForm' action='/styleone/employeesView'>");
 pw.println("</form>");
 pw.println("</body>");
 pw.println("</html>");
+return;
+}
+}catch(DAOException daoException)
+{
+System.out.println(daoException);
+}
+System.out.println("employeeId is 2 "+employeeId);
+employee.setEmployeeId(employeeId);
+employee.setName(name);
+employee.setDesignationCode(designationCode);
+employee.setDateOfBirth(dateOfBirth);
+employee.setGender(gender);
+employee.setIsIndian(isIndian.equals("Y"));
+employee.setBasicSalary(basicSalary);
+employee.setPanNumber(panNumber);
+employee.setAadharCardNumber(aadharCardNumber);
+try
+{
+employeeDAO.update(employee);
+System.out.println("idhar aaya 1");
+pw.println("<!DOCTYPE HTML>");
+pw.println("<html lang='en'>");
+pw.println("<head>");
+pw.println("<title>HR Application</title>");
+pw.println("</head>");
+pw.println("<body>");
+pw.println("<!-- Main Container starts here -->");
+pw.println("<div style='width:90hw;height:auto;border:1px solid black'>");
+pw.println("<!-- header starts here -->");
+pw.println("<div style='margin:5px;width:90hw;height:auto;border:1px solid black'>");
+pw.println("<img src='/styleone/images/logo.png' style='float:left'><div style='margin-top:25px;margin-bottom:35px;font-size:20pt'>Thinking Machines</div>");
+pw.println("</div><!-- header ends here -->");
+pw.println("<!-- Content - section  starts here -->");
+pw.println("<div style='width:90hw;height:70vh;margin:5px;border:1px solid white'>");
+pw.println("<!-- left panel starts here -->");
+pw.println("<div style='height:65vh;margin:5px;float:left;padding:5px;border:1px solid black'>");
+pw.println("<a href='/styleone/designationsView'>Designations</a><br>");
+pw.println("<a href='/styleone/employeesView'>Employees</a>");
+pw.println("</div>");
+pw.println("<!-- left panel ends here -->");
+pw.println("<!-- right panel starts here -->");
+pw.println("<div style='height:65vh;margin-left:105px;margin-right:5px;margin-bottom:5px;margin-top:5px;padding:5px;border:1px solid black'>");
+pw.println("<h3>Notification</h3>");
+pw.println("Employee updated<br><br>");
+pw.println("<form action='/styleone/employeesView'>");
+pw.println("<button type='submit'>Ok</button>");
+pw.println("</div>");
+pw.println("<!--right panel ends here -->");
+pw.println("</div>");
+pw.println("<!-- content section ends here -->");
+pw.println("<!-- footer starts here -->");
+pw.println("<div style='width:90hw;height:auto;margin:5px;text-align:center;border:1px solid white'>");
+pw.println("&copy;Thinking machines 2020");
+pw.println("</div>");
+pw.println("<!-- footer ends here -->");
+pw.println("</div> <!-- Main ends starts here -->");
+pw.println("</body>");
+pw.println("</html>");
+
+}catch(DAOException daoException)
+{
+System.out.println(daoException);
+// recreate form with error message at top of form and send back the page
+}
 }catch(Exception exception)
 {
-System.out.println(exception); //remove after testing
 }
 }
 public void doPost(HttpServletRequest request,HttpServletResponse response)

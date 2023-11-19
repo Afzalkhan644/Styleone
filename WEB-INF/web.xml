@@ -137,4 +137,16 @@
 <url-pattern>/editEmployee</url-pattern>
 </servlet-mapping>
 
+
+
+<servlet>
+<servlet-name>UpdateEmployee</servlet-name>
+<servlet-class>com.thinking.machines.hr.servlets.UpdateEmployee</servlet-class>
+</servlet>
+
+<servlet-mapping>
+<servlet-name>UpdateEmployee</servlet-name>
+<url-pattern>/updateEmployee</url-pattern>
+</servlet-mapping>
+
 </web-app>
